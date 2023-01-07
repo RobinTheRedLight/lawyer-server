@@ -18,6 +18,7 @@ async function run() {
     try {
         const serviceCollection = client.db('lawyerService').collection('services');
         const reviewCollection = client.db('lawyerService').collection('review');
+        const addServiceCollection = client.db('lawyerService').collection('addServices');
 
         app.get('/services', async (req, res) => {
             const query = {}
@@ -69,6 +70,19 @@ async function run() {
             const result = await reviewCollection.deleteOne(query);
             res.send(result);
         })
+
+        app.post('/addservice', async (req, res) => {
+            const addservice = req.body;
+            const result = await addServiceCollection.insertOne(addservice);
+            res.send(result);
+        });
+
+        app.get('/addservice', async (req, res) => {
+            let query = {};
+            const cursor = addServiceCollection.find(query);
+            const addservice = await cursor.toArray();
+            res.send(addservice);
+        });
     }
     finally {
 
